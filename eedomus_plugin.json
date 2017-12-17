@@ -2,7 +2,7 @@
 	"plugin_id":"lms",
 	"name_fr": "Logitech Media Server",
 	"icon":"lms.png",
-	"version":"1.00",
+	"version":"1.01",
 	"creation_date":"2017-12-17",
 	"modification_date":"2017-12-17",
 	"author":"<a href='https://github.com/DamienLGD/LMS_eedomus' target='_blank'>Xianghua<img src='/img/external.png'></a>",
