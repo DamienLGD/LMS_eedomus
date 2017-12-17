@@ -1,0 +1,127 @@
+{
+	"plugin_id":"lms",
+	"name_fr": "Logitech Media Server",
+	"icon":"lms.png",
+	"version":"1.00",
+	"creation_date":"2017-12-17",
+	"modification_date":"2017-12-17",
+	"author":"<a href='https://github.com/DamienLGD/LMS_eedomus' target='_blank'>Xianghua<img src='/img/external.png'></a>",
+	"description_fr":"plugin pour les Squeezebox, attention pour un fonctionnement optimal (retour d'état) mettez le dossier <a href='https://www.dropbox.com/sh/poa4cxsxccehdqv/AADj9PSSSk2Rb9XAJk1YylAKa?dl=0' target='_blank'>XML</a> dans le dossier HTML de votre serveur LMS, ainsi que les bons droits (775) Voir le lien forum si besoin d'aide",
+	"description_en":"Squeezebox plugin, to have instant state, put <a href='https://www.dropbox.com/sh/poa4cxsxccehdqv/AADj9PSSSk2Rb9XAJk1YylAKa?dl=0' target='_blank'>XML</a> folder in the HTML folder of your LMS, add the good scope (775) Go to forum link if you need help",
+	"description_es": "",
+	"description_it": "",
+	"description_de": "",
+	"forum_link": "http://forum.eedomus.com/viewtopic.php?f=15&t=2977",
+"parameters":
+[
+	{
+		"parameter": "IP", 
+		"description": "Adresse IP du serveur LMS",
+		"xtype": "textfield",
+		"default_value": "",
+		"field": "width:130, allowBlank:false, maskRe:/[0-9.]/, regex:/^(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])$/,  regexText:'Adresse IP invalide [0-255].[0-255].[0-255].[0-255]'"
+	},
+	{
+		"parameter": "PORT", 
+		"description": "Port du serveur LMS",
+		"xtype": "textfield",
+		"default_value": "",
+		"field": "width:130, allowBlank:false"
+	},
+	{
+		"parameter": "MAC", 
+		"description": "Adresse Mac de votre Squeezebox (séparé par des :)",
+		"xtype": "textfield",
+		"default_value": "",
+		"field": "width:130, allowBlank:false"
+	}
+],
+	"devices":
+[
+	{
+		"device_id":"lmspower",
+		"module_id":"41",
+		"type":"http",
+		"name_fr":"Squeezebox Power",
+		"name_en":"Squeezebox Power",
+		"icon":"remote.png",
+		"utilisation_id":"43", 
+		"parameters":
+		{
+			"VAR1": "plugin.parameters.IP",
+			"VAR2": "plugin.parameters.PORT",
+			"VAR3": "plugin.parameters.MAC",
+			"value_type":"list",
+			"ignore_errors":3,
+			"RAW_URL":"http://[VAR1]:[VAR2]/xml/status_header.xml?&player=[VAR3]",
+			"RAW_XPATH":"//*[local-name()='playmode']",
+			"POLLING":"1",
+			"convert": 0
+		},
+		"values":
+		[
+			{ "value": "playing", "description": "On", "icon": "default_on.png", "http_url": "http://[VAR1]:[VAR2]/status.html?", "http_type": "GET",  "http_params": "p0=play&player=[VAR3]" },
+			{ "value": "stopped", "description": "Off", "icon": "default_off.png", "http_url": "http://[VAR1]:[VAR2]/status.html?", "http_type": "GET",  "http_params": "p0=stop&player=[VAR3]" },
+			{ "value": "paused", "description": "Pause", "icon": "pause.png", "http_url": "http://[VAR1]:[VAR2]/status.html?", "http_type": "GET",  "http_params": "p0=pause&player=[VAR3]" }
+		]
+	},
+	{
+		"device_id":"lmsvolume",
+		"parent_id": "lmspower",
+		"module_id":"41",
+		"type":"http",
+		"name_fr":"Squeezebox Volume",
+		"name_en":"Squeezebox Volume",
+		"icon":"volume.png",
+		"utilisation_id":"43", 
+		"parameters":
+		{
+			"VAR1": "plugin.parameters.IP",
+			"VAR2": "plugin.parameters.PORT",
+			"VAR3": "plugin.parameters.MAC",
+			"value_type":"list",
+			"ignore_errors":3,
+			"RAW_URL":"http://[VAR1]:[VAR2]/xml/status_header.xml?&player=[VAR3]",
+			"RAW_XPATH":"//*[local-name()='volume']",
+			"POLLING":"3",
+			"convert": 0
+		},
+		"values":
+		[
+			{ "value": 1, "description": "Sleep 30 mn", "icon": "timewakeup.png", "http_url": "http://[VAR1]:[VAR2]/status.html?", "http_type": "GET",  "http_params": "p0=sleep&p1=1800&player=[VAR3]" },
+			{ "value": 10, "description": "10%", "icon": "volume.png", "http_url": "http://[VAR1]:[VAR2]/status.html?", "http_type": "GET",  "http_params": "p0=mixer&p1=volume&p2=10&player=[VAR3]" },
+			{ "value": 20, "description": "20%", "icon": "volume.png", "http_url": "http://[VAR1]:[VAR2]/status.html?", "http_type": "GET",  "http_params": "p0=mixer&p1=volume&p2=20&player=[VAR3]" },
+			{ "value": 30, "description": "30%", "icon": "volume.png", "http_url": "http://[VAR1]:[VAR2]/status.html?", "http_type": "GET",  "http_params": "p0=mixer&p1=volume&p2=30&player=[VAR3]" },
+			{ "value": 40, "description": "40%", "icon": "volume.png", "http_url": "http://[VAR1]:[VAR2]/status.html?", "http_type": "GET",  "http_params": "p0=mixer&p1=volume&p2=40&player=[VAR3]" },
+			{ "value": 50, "description": "50%", "icon": "volume.png", "http_url": "http://[VAR1]:[VAR2]/status.html?", "http_type": "GET",  "http_params": "p0=mixer&p1=volume&p2=50&player=[VAR3]" },
+			{ "value": 60, "description": "60%", "icon": "volume.png", "http_url": "http://[VAR1]:[VAR2]/status.html?", "http_type": "GET",  "http_params": "p0=mixer&p1=volume&p2=60&player=[VAR3]" },
+			{ "value": 70, "description": "70%", "icon": "volume.png", "http_url": "http://[VAR1]:[VAR2]/status.html?", "http_type": "GET",  "http_params": "p0=mixer&p1=volume&p2=70&player=[VAR3]" },
+			{ "value": 80, "description": "80%", "icon": "volume.png", "http_url": "http://[VAR1]:[VAR2]/status.html?", "http_type": "GET",  "http_params": "p0=mixer&p1=volume&p2=80&player=[VAR3]" },
+			{ "value": 90, "description": "90%", "icon": "volume.png", "http_url": "http://[VAR1]:[VAR2]/status.html?", "http_type": "GET",  "http_params": "p0=mixer&p1=volume&p2=90&player=[VAR3]" },
+			{ "value": 100, "description": "100%", "icon": "volume.png", "http_url": "http://[VAR1]:[VAR2]/status.html?", "http_type": "GET",  "http_params": "p0=mixer&p1=volume&p2=100&player=[VAR3]" }				
+		]
+	},
+	{
+		"device_id":"lmstitle",
+		"parent_id": "lmspower",
+		"module_id":"51",
+		"type":"http",
+		"name_fr":"Squeezebox Title",
+		"name_en":"Squeezebox Title",
+		"icon":"music.png",
+		"utilisation_id":"35", 
+		"parameters":
+		{
+			"VAR1": "plugin.parameters.IP",
+			"VAR2": "plugin.parameters.PORT",
+			"VAR3": "plugin.parameters.MAC",
+			"value_type":"string",
+			"ignore_errors":3,
+			"RAW_URL":"http://[VAR1]:[VAR2]/xml/status_header.xml?&player=[VAR3]",
+			"RAW_XPATH":"//*[local-name()='current_title']",
+			"POLLING":"3",
+			"convert": 0
+		}
+	}
+]
+}
